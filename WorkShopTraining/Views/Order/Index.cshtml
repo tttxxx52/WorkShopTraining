@@ -1,0 +1,56 @@
+﻿@model WorkShopTraining.Models.Order
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+
+@using (Html.BeginForm("GetData", "OrderController", FormMethod.Post, new { @id = "orderForm" }))
+{
+    <div class="form-horizontal">
+        @Html.AntiForgeryToken()
+        <h3>查詢訂單</h3>
+        <table class="table table-bordered">
+            <tr>
+                <td>訂單編號</td>
+                <td colspan="4">@Html.TextBoxFor(model => model.OrderID, new { @class = "k-textbox" })</td>
+            </tr>
+            <tr>
+                <td>客戶名稱</td>
+                <td colspan="4">@Html.TextBoxFor(model => model.CustomerName)</td>
+            </tr>
+
+            <tr>
+                <td>負責員工</td>
+                <td colspan="4">@Html.DropDownListFor(model => model.EmployeeID, (List<SelectListItem>)ViewBag.empData, string.Empty)</td>
+            </tr>
+            <tr>
+                <td>出貨公司</td>
+                <td colspan="4">@Html.DropDownListFor(model => model.ShipperID, (List<SelectListItem>)ViewBag.shipperData, string.Empty)</td>
+            </tr>
+            <tr>
+                <td>訂購日期</td>
+                <td>@Html.TextBoxFor(model => model.OrderDate, new { @type = "date" })</td>
+                <td>出貨日期</td>
+                <td>@Html.TextBoxFor(model => model.ShippedDate, new { @type = "date" })</td>
+            </tr>
+            <tr>
+                <td>需要日期</td>
+                <td colspan="4">@Html.TextBoxFor(model => model.RequiredDate, new { @type = "date" })</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td colspan="4">
+                    <input type="submit" value="查詢" class="k-button">
+                    <input type="reset" value="清除" onclick="Back()" class="k-button">
+                    <input type="reset" value="新增" class="k-button" onclick=location.href =''>
+                </td>
+            </tr>
+        </table>
+
+
+        <div id="grid"></div>
+    </div>
+
+}
