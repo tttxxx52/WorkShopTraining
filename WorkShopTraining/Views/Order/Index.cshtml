@@ -6,8 +6,7 @@
 
 
 
-@using (Html.BeginForm("GetData", "OrderController", FormMethod.Post, new { @id = "orderForm" }))
-{
+
     <div class="form-horizontal">
         @Html.AntiForgeryToken()
         <h3>查詢訂單</h3>
@@ -53,4 +52,4 @@
         <div id="grid"></div>
     </div>
 
-}
+
