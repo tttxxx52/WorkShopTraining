@@ -11,7 +11,7 @@ namespace WorkShopTraining.Controllers
         // GET: Order
         public ActionResult Index()
         {
-            Models.OrderService orderService = new Models.OrderService();
+            ModelService.OrderService orderService = new ModelService.OrderService();
             List<Models.Order> dataList = orderService.GetEmployeeData();
             List<SelectListItem> employeeList = new List<SelectListItem>();
             List<SelectListItem> shipperList = new List<SelectListItem>();
