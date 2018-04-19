@@ -6,7 +6,7 @@
 
 
 
-
+<form id="orderForm">
     <div class="form-horizontal">
         @Html.AntiForgeryToken()
         <h3>查詢訂單</h3>
@@ -17,7 +17,7 @@
             </tr>
             <tr>
                 <td>客戶名稱</td>
-                <td colspan="4">@Html.TextBoxFor(model => model.CustomerName)</td>
+                <td colspan="4">@Html.TextBoxFor(model => model.CustomerName, new { @class = "k-textbox" })</td>
             </tr>
 
             <tr>
@@ -48,8 +48,18 @@
             </tr>
         </table>
 
-
         <div id="grid"></div>
     </div>
 
+</form>
 
+
+<script>
+    $(document).ready(function () {
+        $("#OrderDate").kendoDatePicker();
+        $("#ShippedDate").kendoDatePicker();
+        $("#RequiredDate").kendoDatePicker();
+    });
+
+
+</script>

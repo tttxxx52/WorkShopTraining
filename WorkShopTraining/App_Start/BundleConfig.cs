@@ -26,6 +26,11 @@ namespace WorkShopTraining
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",
                       "~/Content/site.css"));
+
+            bundles.Add(new ScriptBundle("~/bundles/KendoUi").Include(
+                "~/Scripts/jquery-1.12.4.min.js",
+                "~/Scripts/kendo.all.min.js"));
         }
+
     }
 }
