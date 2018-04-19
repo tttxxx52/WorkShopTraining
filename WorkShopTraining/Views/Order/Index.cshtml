@@ -61,5 +61,21 @@
         $("#RequiredDate").kendoDatePicker();
     });
 
+    var empData = @Html.Raw(Json.Encode(ViewBag.empData));
+    var shipperData =@Html.Raw(Json.Encode(ViewBag.shipperData));
+
+    $("#EmployeeID").kendoDropDownList({
+        dataTextField: "Text",
+        dataValueField: "Value",
+        optionLabel: "請選擇",
+        dataSource: empData
+    });
+
+    $("#ShipperID").kendoDropDownList({
+        dataTextField: "Text",
+        dataValueField: "Value",
+        optionLabel: "請選擇",
+        dataSource: shipperData
+    });
 
 </script>
