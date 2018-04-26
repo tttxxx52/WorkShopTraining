@@ -22,7 +22,7 @@
 
             <tr>
                 <td>負責員工</td>
-                <td colspan="4">@Html.DropDownListFor(model => model.EmployeeID, (List<SelectListItem>)ViewBag.empData, string.Empty)</td>
+                <td colspan="4">@Html.DropDownListFor(model => model.EmployeeID, (SelectList)ViewBag.empData, string.Empty)</td>
             </tr>
             <tr>
                 <td>出貨公司</td>
@@ -41,7 +41,7 @@
             <tr>
                 <td></td>
                 <td colspan="4">
-                    <input type="submit" value="查詢" class="k-button">
+                    <input type="reset" value="查詢" onclick="SearchDataToGrid()" class="k-button">
                     <input type="reset" value="清除" onclick="Back()" class="k-button">
                     <input type="reset" value="新增" class="k-button" onclick=location.href =''>
                 </td>
@@ -56,26 +56,122 @@
 
 <script>
     $(document).ready(function () {
+        $("#grid").kendoGrid({
+            scrollable: false,
+            filterable: true,
+            sortable: true,
+        });
+
+
         $("#OrderDate").kendoDatePicker({format: "yyyy-MM-dd"});
         $("#ShippedDate").kendoDatePicker({format: "yyyy-MM-dd"});
         $("#RequiredDate").kendoDatePicker({format: "yyyy-MM-dd"});
+
+
+        var empData = @Html.Raw(Json.Encode(ViewBag.empData));
+        var shipperData =@Html.Raw(Json.Encode(ViewBag.shipperData));
+
+        $("#EmployeeID").kendoDropDownList({
+            dataTextField: "Text",
+            dataValueField: "Value",
+            optionLabel: "請選擇",
+            dataSource: empData
+        });
+
+        $("#ShipperID").kendoDropDownList({
+            dataTextField: "Text",
+            dataValueField: "Value",
+            optionLabel: "請選擇",
+            dataSource: shipperData
+        });
+
     });
 
-    var empData = @Html.Raw(Json.Encode(ViewBag.empData));
-    var shipperData =@Html.Raw(Json.Encode(ViewBag.shipperData));
+    function SearchDataToGrid() {
+        $.ajax({
+            url: "/Order/GetData",
+            type: "POST",
+            data: $('#orderForm').serialize(), //傳直到/order/getdata
+            dataType: "JSON",
+            success: function (msg) {
+                debugger;
+                $("#grid").kendoGrid({
+                    pageable: {
+                        pageSize: 10,
+                        pageSizes: true,
+                    },
+                    dataSource: msg,
+                    columns: [
+                                {
+                                    template: "<div style='text-align:center;'>#= ++record #</div>",
+                                    attributes: { style: "text-align:center" },
+                                    headerAttributes: { style: "text-align:center;vertical-align:middle" },
+                                    attributes: { style: "text-align:center" },
+                                    width: 40,
+                                    title: "序號"
+                                },
+                                {
+                                    field: "OrderID",
+                                    title: "訂單編號",
+                                    width: 180,
+                                    attributes: { style: "text-align:center" },
+                                    headerAttributes: { style: "text-align:center;vertical-align:middle" },
+                                },
+                                {
+                                    field: "CustomerName",
+                                    title: "客戶名稱",
+                                    attributes: { style: "text-align:center" },
+                                    width: 120,
+                                    headerAttributes: { style: "text-align:center;vertical-align:middle" }
+                                },
+                                {
+                                    field: "OrderDate",
+                                    title: "訂購日期",
+                                    attributes: { style: "text-align:center" },
+                                    width: 100,
+                                    headerAttributes: { style: "text-align:center;vertical-align:middle" }
+                                },
+                                {
+                                    field: "ShippedDate",
+                                    title: "出貨日期",
+                                    attributes: { style: "text-align:center" },
+                                    width: 180,
+                                    headerAttributes: { style: "text-align:center;vertical-align:middle" }
+                                },
 
-    $("#EmployeeID").kendoDropDownList({
-        dataTextField: "Text",
-        dataValueField: "Value",
-        optionLabel: "請選擇",
-        dataSource: empData
-    });
 
-    $("#ShipperID").kendoDropDownList({
-        dataTextField: "Text",
-        dataValueField: "Value",
-        optionLabel: "請選擇",
-        dataSource: shipperData
-    });
+                            {
+                                command: {
+                                    text: "修改",
+                                    //click: updataCol,
+                                },
+                                attributes: { style: "text-align:center" },
+                                width: 180,
+                                headerAttributes: { style: "text-align:center;vertical-align:middle" },
+                                title: "修改",
+                            },
 
+                               {
+                                   command: {
+                                       text: "刪除",
+                                      // click: deleteCol,
+                                   },
+                                   attributes: { style: "text-align:center" },
+                                   width: 180,
+                                   headerAttributes: { style: "text-align:center;vertical-align:middle" },
+                                   title: "刪除",
+                               }
+                    ],
+                    //record製作Grid的序號
+                    dataBinding: function () {
+                        record = (this.dataSource.page() - 1) * this.dataSource.pageSize();
+                    }
+                });
+       
+            },
+            error: function (xhr) {
+                console.log(xhr);
+            }
+        });      
+    }
 </script>

@@ -98,5 +98,62 @@ namespace WorkShopTraining.ModelService
         }
 
 
+        /// <summary>
+        /// 取得搜尋條件資料
+        /// </summary>
+        /// <returns></returns>
+        public List<Models.Order> SearchOrder(Models.Order order)
+        {
+            DataTable dataTable = new DataTable();
+            string sql = @"Select OrderID, CompanyName AS CustomerName,  CONVERT(VARCHAR,OrderDate,23) as OrderDate, ShippedDate as ShippedDate
+                            From Sales.Orders O join Sales.Customers C on O.CustomerID = C.CustomerID 
+                            Where (OrderID = @OrderID OR @OrderID = 0)
+                              AND (CompanyName = @CompanyName OR @CompanyName IS NULL)
+                              AND (EmployeeID = @EmployeeID OR @EmployeeID = 0)
+                              AND (ShipperID = @ShipperID OR @ShipperID = 0)
+                              AND (OrderDate = @OrderDate OR @OrderDate IS NULL)
+                              AND (ShippedDate = @ShippedDate OR @ShippedDate IS NULL)
+                              AND (RequiredDate = @RequiredDate OR @RequiredDate IS NULL)";
+
+            using (SqlConnection conn = new SqlConnection(this.GetDBConnectionString()))
+            {
+                conn.Open();
+                SqlCommand cmd = new SqlCommand(sql, conn);
+                cmd.Parameters.Add(new SqlParameter("@OrderID", order.OrderID));
+                cmd.Parameters.Add(new SqlParameter("@CompanyName", order.CustomerName == null ? (object)DBNull.Value : order.CustomerName));
+                cmd.Parameters.Add(new SqlParameter("@EmployeeID", order.EmployeeID));
+                cmd.Parameters.Add(new SqlParameter("@ShipperID", order.ShipperID));
+                cmd.Parameters.Add(new SqlParameter("@OrderDate", order.OrderDate == null ? (object)DBNull.Value : order.OrderDate));
+                cmd.Parameters.Add(new SqlParameter("@ShippedDate", order.ShippedDate == null ? (object)DBNull.Value : order.ShippedDate));
+                cmd.Parameters.Add(new SqlParameter("@RequiredDate", order.RequiredDate == null ? (object)DBNull.Value : order.RequiredDate));
+                SqlDataAdapter sqlAdapter = new SqlDataAdapter(cmd);
+                sqlAdapter.Fill(dataTable);
+                conn.Close();
+            }
+            return this.MapOrderDataToList(dataTable);
+        }
+
+        /// <summary>
+        /// 取得訂單資料變成List
+        /// </summary>
+        /// <param name="dataTable"></param>
+        /// <returns></returns>
+        private List<Order> MapOrderDataToList(DataTable dataTable)
+        {
+            List<Models.Order> result = new List<Order>();
+            foreach (DataRow row in dataTable.Rows)
+            {
+                result.Add(new Order
+                {
+                    OrderID = (int)row["OrderID"],
+                    CustomerName = row["CustomerName"].ToString(),
+                    OrderDate = row["OrderDate"].ToString(),
+                    ShippedDate = row["ShippedDate"] == DBNull.Value ? (DateTime?)null : (DateTime)row["ShippedDate"]
+                });
+            }
+            return result;
+        }
+
+
     }
 }

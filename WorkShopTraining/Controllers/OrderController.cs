@@ -12,45 +12,30 @@ namespace WorkShopTraining.Controllers
         public ActionResult Index()
         {
             ModelService.OrderService orderService = new ModelService.OrderService();
-            List<Models.Order> dataList = orderService.GetEmployeeData();
-            List<SelectListItem> employeeList = new List<SelectListItem>();
-       
 
             //員工List
-            foreach (var item in dataList)
-            {
-                employeeList.Add(new SelectListItem()
-                {
-                    Text = item.EmployeeName,
-                    Value = item.EmployeeID.ToString(),
-                });
-            }
-            ViewBag.empData = employeeList;
+            List<Models.Order> dataList = orderService.GetEmployeeData();
+            ViewBag.empData = new SelectList(dataList, "EmployeeID", "EmployeeName");
 
             //供應商List
             dataList = orderService.GetShipperData();
-
             ViewBag.shipperData = new SelectList(dataList, "ShipperID", "ShipperName");
-           
-
+       
             return View();
-            //foreach (var item in dataList)
-            //{
-            //    shipperList.Add(new SelectListItem()
-            //    {
-            //        Text = item.ShipperName,
-            //        Value = item.ShipperID.ToString()
-            //    });
-            //}
-
-            //ViewBag.shipperData = shipperList;
-            //return View();
         }
 
+
+        /// <summary>
+        /// 回傳訂單資料
+        /// </summary>
+        /// <param name="order"></param>
+        /// <returns></returns>
         [HttpPost()]
-        public ActionResult GetData(Models.Order order)
+        public JsonResult GetData(Models.Order order)
         {
-            return RedirectToAction("Index");
+            ModelService.OrderService orderService = new ModelService.OrderService();
+            List<Models.Order> list = orderService.SearchOrder(order);
+            return this.Json(list);
         }
 
     }
