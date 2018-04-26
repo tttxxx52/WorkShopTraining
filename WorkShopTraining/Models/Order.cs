@@ -9,8 +9,6 @@ namespace WorkShopTraining.Models
 {
     public class Order
     {
-    
-        
             /// <summary>
             /// 訂單編號
             /// </summary>

@@ -26,11 +26,11 @@
             </tr>
             <tr>
                 <td>出貨公司</td>
-                <td colspan="4">@Html.DropDownListFor(model => model.ShipperID, (List<SelectListItem>)ViewBag.shipperData, string.Empty)</td>
+                <td colspan="4">@Html.DropDownListFor(model => model.ShipperID, (SelectList)ViewBag.shipperData, string.Empty)</td>
             </tr>
             <tr>
                 <td>訂購日期</td>
-                <td>@Html.TextBoxFor(model => model.OrderDate, new { @type = "date" })</td>
+                <td>@Html.TextBoxFor(model => model.OrderDate, "{0:yyyy/MM/dd}", new { @type = "date" })</td>
                 <td>出貨日期</td>
                 <td>@Html.TextBoxFor(model => model.ShippedDate, new { @type = "date" })</td>
             </tr>
@@ -56,9 +56,9 @@
 
 <script>
     $(document).ready(function () {
-        $("#OrderDate").kendoDatePicker();
-        $("#ShippedDate").kendoDatePicker();
-        $("#RequiredDate").kendoDatePicker();
+        $("#OrderDate").kendoDatePicker({format: "yyyy-MM-dd"});
+        $("#ShippedDate").kendoDatePicker({format: "yyyy-MM-dd"});
+        $("#RequiredDate").kendoDatePicker({format: "yyyy-MM-dd"});
     });
 
     var empData = @Html.Raw(Json.Encode(ViewBag.empData));

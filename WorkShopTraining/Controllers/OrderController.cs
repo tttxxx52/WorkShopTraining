@@ -14,7 +14,7 @@ namespace WorkShopTraining.Controllers
             ModelService.OrderService orderService = new ModelService.OrderService();
             List<Models.Order> dataList = orderService.GetEmployeeData();
             List<SelectListItem> employeeList = new List<SelectListItem>();
-            List<SelectListItem> shipperList = new List<SelectListItem>();
+       
 
             //員工List
             foreach (var item in dataList)
@@ -29,17 +29,22 @@ namespace WorkShopTraining.Controllers
 
             //供應商List
             dataList = orderService.GetShipperData();
-            foreach (var item in dataList)
-            {
-                shipperList.Add(new SelectListItem()
-                {
-                    Text = item.ShipperName,
-                    Value = item.ShipperID.ToString()
-                });
-            }
 
-            ViewBag.shipperData = shipperList;
+            ViewBag.shipperData = new SelectList(dataList, "ShipperID", "ShipperName");
+           
+
             return View();
+            //foreach (var item in dataList)
+            //{
+            //    shipperList.Add(new SelectListItem()
+            //    {
+            //        Text = item.ShipperName,
+            //        Value = item.ShipperID.ToString()
+            //    });
+            //}
+
+            //ViewBag.shipperData = shipperList;
+            //return View();
         }
 
         [HttpPost()]
