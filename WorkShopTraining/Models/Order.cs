@@ -44,7 +44,7 @@ namespace WorkShopTraining.Models
             /// </summary>
             [DisplayName("訂單日期")]
             [Required]
-            public string OrderDate { get; set; }
+            public DateTime? OrderDate { get; set; }
 
             /// <summary>
             /// 需要日期

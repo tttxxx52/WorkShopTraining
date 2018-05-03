@@ -94,6 +94,23 @@
             data: $('#orderForm').serialize(), //傳直到/order/getdata
             dataType: "JSON",
             success: function (msg) {
+
+                $.each(msg, function(row, value ) {
+                    //訂單日期
+                    var OrderDate =  value.OrderDate.replace(/\/Date\((-?\d+)\)\//, '$1');
+                    OrderDate = new Date(parseInt(OrderDate));
+                    OrderDate = OrderDate.getFullYear() + '-' +('0' + (OrderDate.getMonth()+1)).slice(-2)+ '-' +  OrderDate.getDate();
+                    value.OrderDate = OrderDate;
+
+                    //出貨日期
+                    if(value.ShippedDate){
+                        var ShippedDate =  value.ShippedDate.replace(/\/Date\((-?\d+)\)\//, '$1');
+                        ShippedDate = new Date(parseInt(OrderDate));
+                        ShippedDate = ShippedDate.getFullYear() + '-' +('0' + (ShippedDate.getMonth()+1)).slice(-2)+ '-' +  ShippedDate.getDate();
+                        value.ShippedDate = ShippedDate;
+                    }
+                });
+
                 debugger;
                 $("#grid").kendoGrid({
                     pageable: {

@@ -105,7 +105,7 @@ namespace WorkShopTraining.ModelService
         public List<Models.Order> SearchOrder(Models.Order order)
         {
             DataTable dataTable = new DataTable();
-            string sql = @"Select OrderID, CompanyName AS CustomerName,  CONVERT(VARCHAR,OrderDate,23) as OrderDate, ShippedDate as ShippedDate
+            string sql = @"Select OrderID, CompanyName AS CustomerName, OrderDate, ShippedDate as ShippedDate
                             From Sales.Orders O join Sales.Customers C on O.CustomerID = C.CustomerID 
                             Where (OrderID = @OrderID OR @OrderID = 0)
                               AND (CompanyName = @CompanyName OR @CompanyName IS NULL)
@@ -147,7 +147,7 @@ namespace WorkShopTraining.ModelService
                 {
                     OrderID = (int)row["OrderID"],
                     CustomerName = row["CustomerName"].ToString(),
-                    OrderDate = row["OrderDate"].ToString(),
+                    OrderDate = row["OrderDate"] == DBNull.Value ? (DateTime?)null : (DateTime)row["OrderDate"],
                     ShippedDate = row["ShippedDate"] == DBNull.Value ? (DateTime?)null : (DateTime)row["ShippedDate"]
                 });
             }
